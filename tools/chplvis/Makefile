@@ -28,6 +28,7 @@ include $(CHPL_MAKE_HOME)/make/Makefile.base
 
 # FLTK config section
 
+FLTK_INSTALL_DIR=/usr/local/Cellar/fltk/1.3.3-r10866
 FLTK_CONFIG=$(FLTK_INSTALL_DIR)/bin/fltk-config
 FLTK_FLUID=$(FLTK_INSTALL_DIR)/bin/fluid
 
