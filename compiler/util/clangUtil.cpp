@@ -484,7 +484,7 @@ void readMacrosClang(void) {
   // Later, if we see a use of a macro-function, we can
   //  compile it to a static/inline function with args types based an use
   // how will we know the return type?
-  //   expr->getType() stmt->getRetValue()->getType.... 
+  //   expr->getType() stmt->getRetValue()->getType....
   //     ... add function wrapping macro with wrong type
   //         parse/analyze squelching errors; get the macro expression type;
   //         correct the type and recompile to LLVM
@@ -579,7 +579,7 @@ class CCodeGenConsumer : public ASTConsumer {
     }
 
     // ASTConsumer override:
-    // 
+    //
     // HandleTopLevelDecl - Handle the specified top-level declaration.
     // This is called by the parser to process every top-level Decl*.
     //
@@ -768,7 +768,7 @@ class CCodeGenConsumer : public ASTConsumer {
        // Custom to Chapel
        if( info->parseOnly ) return;
        // End Custom to Chapel
-       
+
        Builder->EmitTentativeDefinition(D);
      }
 
@@ -796,7 +796,7 @@ class CCodeGenConsumer : public ASTConsumer {
 #endif
            );
      }
-     
+
      // ASTConsumer override:
      //
      // \brief Handle a pragma that appends to Linker Options.  Currently
@@ -1089,7 +1089,7 @@ bool setAlreadyConvertedExtern(ModuleSymbol* module, const char* name)
 void runClang(const char* just_parse_filename) {
   static bool is_installed_fatal_error_handler = false;
 
-  /* TODO -- note that clang/examples/clang-interpreter/main.cpp 
+  /* TODO -- note that clang/examples/clang-interpreter/main.cpp
              includes an example for getting the executable path,
              so that we could automatically set CHPL_HOME. */
   std::string home(CHPL_HOME);
@@ -1136,7 +1136,7 @@ void runClang(const char* just_parse_filename) {
   for( size_t i = 1; i < args.size(); ++i ) {
     clangCCArgs.push_back(args[i]);
   }
- 
+
   forv_Vec(const char*, dirName, incDirs) {
     clangCCArgs.push_back(std::string("-I") + dirName);
   }
@@ -1225,7 +1225,7 @@ void runClang(const char* just_parse_filename) {
     if( ! info->parseOnly ) {
       // This seems to be needed, even though it is strange.
       // (otherwise we segfault in info->builder->CreateGlobalString)
-      
+
       // Some IRBuilder methods, codegenning a string,
       // need a basic block in order to get to the module
       // so we create a dummy function to code generate into
@@ -1773,7 +1773,7 @@ void setupForGlobalToWide(void) {
   // Mark the function as external so that it will not be removed
   fn->setLinkage(llvm::GlobalValue::ExternalLinkage);
 
-  llvm::BasicBlock* block = 
+  llvm::BasicBlock* block =
      llvm::BasicBlock::Create(ginfo->module->getContext(), "entry", fn);
   ginfo->builder->SetInsertPoint(block);
 
@@ -1787,7 +1787,7 @@ void setupForGlobalToWide(void) {
 
   for( int i = 0; fns[i]; i++ ) {
     llvm::Constant* f = fns[i];
-    llvm::Value* ptr = ginfo->builder->CreatePointerCast(f, retType); 
+    llvm::Value* ptr = ginfo->builder->CreatePointerCast(f, retType);
     llvm::Value* id = llvm::ConstantInt::get(argType, i);
     llvm::Value* eq = ginfo->builder->CreateICmpEQ(arg, id);
     ret = ginfo->builder->CreateSelect(eq, ptr, ret);
@@ -1837,7 +1837,7 @@ void makeBinaryLLVM(void) {
                              raw_fd_ostream::F_Binary
 #endif
                            );
- 
+
   static bool addedGlobalExts = false;
   if( ! addedGlobalExts ) {
     // Add the Global to Wide optimization if necessary.
@@ -1846,6 +1846,8 @@ void makeBinaryLLVM(void) {
     PassManagerBuilder::addGlobalExtension(PassManagerBuilder::EP_EnabledOnOptLevel0, addGlobalToWide);
     addedGlobalExts = true;
   }
+
+  fprintf(stderr, "EmitBackendOutput::start");
 
   EmitBackendOutput(*info->Diags, info->codegenOptions,
                     info->clangTargetOptions, info->clangLangOptions,
@@ -1856,6 +1858,7 @@ void makeBinaryLLVM(void) {
   output.keep();
   output.os().flush();
 
+  fprintf(stderr, "EmitBackendOutput::stop");
 
   std::string options = "";
 

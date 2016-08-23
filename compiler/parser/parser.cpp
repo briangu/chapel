@@ -124,6 +124,8 @@ ModuleSymbol* parseFile(const char* filename,
                         bool        namedOnCommandLine) {
   ModuleSymbol* retval = NULL;
 
+  fprintf(stderr, "ParseFile: opening \"%s\" for reading\n", filename);
+
   if (FILE* fp = openInputFile(filename)) {
     gFilenameLookup.push_back(filename);
 
